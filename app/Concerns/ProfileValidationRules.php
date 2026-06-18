@@ -2,8 +2,7 @@
 
 namespace App\Concerns;
 
-use App\Models\User;
-use Illuminate\Contracts\Validation\ValidationRule;
+use App\Models\Pengguna;
 use Illuminate\Validation\Rule;
 
 trait ProfileValidationRules
@@ -16,7 +15,7 @@ trait ProfileValidationRules
     protected function profileRules(?int $userId = null): array
     {
         return [
-            'name' => $this->nameRules(),
+            'nama'  => $this->namaRules(),
             'email' => $this->emailRules($userId),
         ];
     }
@@ -26,7 +25,7 @@ trait ProfileValidationRules
      *
      * @return array<int, ValidationRule|array<mixed>|string>
      */
-    protected function nameRules(): array
+    protected function namaRules(): array
     {
         return ['required', 'string', 'max:255'];
     }
@@ -44,8 +43,8 @@ trait ProfileValidationRules
             'email',
             'max:255',
             $userId === null
-                ? Rule::unique(User::class)
-                : Rule::unique(User::class)->ignore($userId),
+                ? Rule::unique(Pengguna::class)
+                : Rule::unique(Pengguna::class)->ignore($userId),
         ];
     }
 }

@@ -16,7 +16,7 @@ type Props = {
 export default function Register({ passwordRules }: Props) {
     return (
         <>
-            <Head title="Register" />
+            <Head title="Daftar" />
             <Form
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}
@@ -27,46 +27,129 @@ export default function Register({ passwordRules }: Props) {
                     <>
                         <div className="grid gap-6">
                             <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="nik">NIK</Label>
                                 <Input
-                                    id="name"
+                                    id="nik"
                                     type="text"
                                     required
                                     autoFocus
                                     tabIndex={1}
-                                    autoComplete="name"
-                                    name="name"
-                                    placeholder="Full name"
+                                    name="nik"
+                                    placeholder="16 digit NIK sesuai KTP"
+                                    maxLength={16}
                                 />
                                 <InputError
-                                    message={errors.name}
+                                    message={errors.nik}
                                     className="mt-2"
                                 />
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                                <Label htmlFor="nama">Nama Lengkap</Label>
+                                <Input
+                                    id="nama"
+                                    type="text"
+                                    required
+                                    tabIndex={2}
+                                    autoComplete="name"
+                                    name="nama"
+                                    placeholder="Nama lengkap sesuai KTP"
+                                />
+                                <InputError
+                                    message={errors.nama}
+                                    className="mt-2"
+                                />
+                            </div>
+
+                            <div className="grid gap-2">
+                                <Label htmlFor="email">Alamat Email</Label>
                                 <Input
                                     id="email"
                                     type="email"
                                     required
-                                    tabIndex={2}
+                                    tabIndex={3}
                                     autoComplete="email"
                                     name="email"
-                                    placeholder="email@example.com"
+                                    placeholder="email@contoh.com"
                                 />
                                 <InputError message={errors.email} />
                             </div>
 
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="tgl_lahir">
+                                        Tanggal Lahir
+                                    </Label>
+                                    <Input
+                                        id="tgl_lahir"
+                                        type="date"
+                                        required
+                                        tabIndex={4}
+                                        name="tgl_lahir"
+                                    />
+                                    <InputError message={errors.tgl_lahir} />
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="jenis_kelamin">
+                                        Jenis Kelamin
+                                    </Label>
+                                    <select
+                                        id="jenis_kelamin"
+                                        name="jenis_kelamin"
+                                        required
+                                        tabIndex={5}
+                                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+                                    >
+                                        <option value="">Pilih...</option>
+                                        <option value="L">Laki-laki</option>
+                                        <option value="P">Perempuan</option>
+                                    </select>
+                                    <InputError
+                                        message={errors.jenis_kelamin}
+                                    />
+                                </div>
+                            </div>
+
                             <div className="grid gap-2">
-                                <Label htmlFor="password">Password</Label>
+                                <Label htmlFor="alamat">Alamat</Label>
+                                <Input
+                                    id="alamat"
+                                    type="text"
+                                    required
+                                    tabIndex={6}
+                                    name="alamat"
+                                    placeholder="Alamat lengkap sesuai KTP"
+                                />
+                                <InputError message={errors.alamat} />
+                            </div>
+
+                            <div className="grid gap-2">
+                                <Label htmlFor="no_hp">
+                                    Nomor HP{' '}
+                                    <span className="text-xs text-muted-foreground">
+                                        (opsional)
+                                    </span>
+                                </Label>
+                                <Input
+                                    id="no_hp"
+                                    type="tel"
+                                    tabIndex={7}
+                                    name="no_hp"
+                                    placeholder="08xxxxxxxxxx"
+                                />
+                                <InputError message={errors.no_hp} />
+                            </div>
+
+                            <div className="grid gap-2">
+                                <Label htmlFor="password">Kata Sandi</Label>
                                 <PasswordInput
                                     id="password"
                                     required
-                                    tabIndex={3}
+                                    tabIndex={8}
                                     autoComplete="new-password"
                                     name="password"
-                                    placeholder="Password"
+                                    placeholder="Kata sandi"
                                     passwordrules={passwordRules}
                                 />
                                 <InputError message={errors.password} />
@@ -74,15 +157,15 @@ export default function Register({ passwordRules }: Props) {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="password_confirmation">
-                                    Confirm password
+                                    Konfirmasi Kata Sandi
                                 </Label>
                                 <PasswordInput
                                     id="password_confirmation"
                                     required
-                                    tabIndex={4}
+                                    tabIndex={9}
                                     autoComplete="new-password"
                                     name="password_confirmation"
-                                    placeholder="Confirm password"
+                                    placeholder="Ulangi kata sandi"
                                     passwordrules={passwordRules}
                                 />
                                 <InputError
@@ -93,18 +176,18 @@ export default function Register({ passwordRules }: Props) {
                             <Button
                                 type="submit"
                                 className="mt-2 w-full"
-                                tabIndex={5}
+                                tabIndex={10}
                                 data-test="register-user-button"
                             >
                                 {processing && <Spinner />}
-                                Create account
+                                Buat Akun
                             </Button>
                         </div>
 
                         <div className="text-center text-sm text-muted-foreground">
-                            Already have an account?{' '}
-                            <TextLink href={login()} tabIndex={6}>
-                                Log in
+                            Sudah punya akun?{' '}
+                            <TextLink href={login()} tabIndex={11}>
+                                Masuk
                             </TextLink>
                         </div>
                     </>
@@ -115,6 +198,6 @@ export default function Register({ passwordRules }: Props) {
 }
 
 Register.layout = {
-    title: 'Create an account',
-    description: 'Enter your details below to create your account',
+    title: 'Buat Akun Baru',
+    description: 'Isi data diri Anda untuk mendaftar sebagai pelamar',
 };

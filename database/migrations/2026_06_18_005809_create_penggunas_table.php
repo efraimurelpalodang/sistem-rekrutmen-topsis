@@ -11,12 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('penggunas', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('nik', 16)->unique()->nullable()->comment('Dari KTP, nullable untuk HRD & admin');
+            $table->string('nama');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role', ['pelamar', 'hrd', 'admin']);
+            $table->date('tgl_lahir')->nullable()->comment('Dari KTP, untuk hitung usia di TOPSIS');
+            $table->enum('jenis_kelamin', ['L', 'P'])->nullable()->comment('Dari KTP');
+            $table->text('alamat')->nullable()->comment('Dari KTP');
+            $table->string('no_hp', 20)->nullable()->comment('Untuk notifikasi WhatsApp');
+            $table->string('foto_profil')->nullable()->comment('Path file foto profil');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -42,7 +48,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('penggunas');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
