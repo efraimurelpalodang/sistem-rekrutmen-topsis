@@ -12,7 +12,7 @@ class TesTeknis extends Model
 {
     use HasFactory;
 
-    protected $table = 'tes_teknises';
+    protected $table = 'tes_teknis';
 
     protected $fillable = [
         'lowongan_id',

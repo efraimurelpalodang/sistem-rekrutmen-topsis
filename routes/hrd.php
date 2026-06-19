@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HRD\LowonganController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified', 'role:hrd'])->group(function () {
@@ -7,13 +8,14 @@ Route::middleware(['auth', 'verified', 'role:hrd'])->group(function () {
   Route::inertia('/hrd/dashboard', 'hrd/dashboard')->name('hrd.dashboard');
 
   // Lowongan
-  // Route::get('/lowongan', [LowonganController::class, 'index'])->name('hrd.lowongan.index');
-  // Route::get('/lowongan/create', [LowonganController::class, 'create'])->name('hrd.lowongan.create');
-  // Route::post('/lowongan', [LowonganController::class, 'store'])->name('hrd.lowongan.store');
-  // Route::get('/lowongan/{id}', [LowonganController::class, 'show'])->name('hrd.lowongan.show');
-  // Route::get('/lowongan/{id}/edit', [LowonganController::class, 'edit'])->name('hrd.lowongan.edit');
-  // Route::put('/lowongan/{id}', [LowonganController::class, 'update'])->name('hrd.lowongan.update');
-  // Route::patch('/lowongan/{id}/toggle', [LowonganController::class, 'toggle'])->name('hrd.lowongan.toggle');
+  Route::get('/lowongan', [LowonganController::class, 'index'])->name('hrd.lowongan.index');
+  Route::get('/lowongan/create', [LowonganController::class, 'create'])->name('hrd.lowongan.create');
+  Route::post('/lowongan', [LowonganController::class, 'store'])->name('hrd.lowongan.store');
+  Route::get('/lowongan/{lowongan}', [LowonganController::class, 'show'])->name('hrd.lowongan.show');
+  Route::get('/lowongan/{lowongan}/edit', [LowonganController::class, 'edit'])->name('hrd.lowongan.edit');
+  Route::put('/lowongan/{lowongan}', [LowonganController::class, 'update'])->name('hrd.lowongan.update');
+  Route::patch('/lowongan/{lowongan}/toggle', [LowonganController::class, 'toggle'])->name('hrd.lowongan.toggle');
+  Route::delete('/lowongan/{lowongan}', [LowonganController::class, 'destroy'])->name('hrd.lowongan.destroy');
 
   // Tes Teknis
   // Route::get('/lowongan/{id}/tes/create', [TesController::class, 'create'])->name('hrd.tes.create');
