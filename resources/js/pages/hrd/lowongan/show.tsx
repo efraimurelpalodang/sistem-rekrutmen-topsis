@@ -84,9 +84,6 @@ export default function LowonganShow() {
     ];
 
     return (
-        // <AppSidebarLayout breadcrumbs={breadcrumbs}>
-        //     <Head title={lowongan.judul} />
-
         <div className="space-y-6 p-6">
             <Card>
                 <CardHeader>
@@ -162,10 +159,37 @@ export default function LowonganShow() {
                                 </p>
                             )}
                         </div>
-                        <Button variant="outline" size="sm" disabled>
-                            {lowongan.tes_teknis
-                                ? 'Kelola Soal'
-                                : 'Buat Tes Teknis'}
+                        <Button variant="outline" size="sm" asChild>
+                            <Link
+                                href={
+                                    lowongan.tes_teknis
+                                        ? `/lowongan/${lowongan.id}/tes/soal`
+                                        : `/lowongan/${lowongan.id}/tes/create`
+                                }
+                            >
+                                {lowongan.tes_teknis
+                                    ? 'Kelola Soal'
+                                    : 'Buat Tes Teknis'}
+                            </Link>
+                        </Button>
+                    </div>
+
+                    <Separator />
+
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h3 className="text-sm font-medium">
+                                Hasil TOPSIS
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                                Lihat ranking pelamar berdasarkan perhitungan
+                                TOPSIS
+                            </p>
+                        </div>
+                        <Button variant="outline" size="sm" asChild>
+                            <Link href={`/topsis/${lowongan.id}/hasil`}>
+                                Lihat Hasil
+                            </Link>
                         </Button>
                     </div>
                 </CardContent>
@@ -226,6 +250,5 @@ export default function LowonganShow() {
                 </CardContent>
             </Card>
         </div>
-        // </AppSidebarLayout>
     );
 }

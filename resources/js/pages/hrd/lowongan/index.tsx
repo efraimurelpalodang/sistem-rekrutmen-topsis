@@ -1,5 +1,5 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { MoreHorizontal, Plus, Trash2 } from 'lucide-react';
+import { ClipboardCheck, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import {
     AlertDialog,
@@ -83,7 +83,9 @@ export default function LowonganIndex() {
 
     return (
         <div className="p-6">
-            <CardHeader className="px-0 mb-7">
+            <Head title="Daftar Lowongan" />
+
+            <CardHeader className="px-0">
                 <div className="flex items-center justify-between">
                     <div>
                         <CardTitle className="text-xl">
@@ -115,7 +117,7 @@ export default function LowonganIndex() {
                         </Button>
                     </div>
                 ) : (
-                    <div className="rounded-sm border">
+                    <div className="rounded-lg border">
                         <Table>
                             <TableHeader>
                                 <TableRow>
@@ -132,7 +134,7 @@ export default function LowonganIndex() {
                                     <TableHead className="w-28">
                                         Status
                                     </TableHead>
-                                    <TableHead className="w-16">Aksi</TableHead>
+                                    <TableHead className="w-40">Aksi</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -168,62 +170,88 @@ export default function LowonganIndex() {
                                             </Badge>
                                         </TableCell>
                                         <TableCell>
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
+                                            <div className="flex items-center justify-end gap-1">
+                                                {lowongan.status ===
+                                                    'ditutup' && (
                                                     <Button
-                                                        variant="ghost"
-                                                        size="icon"
+                                                        variant="outline"
+                                                        size="sm"
+                                                        asChild
                                                     >
-                                                        <MoreHorizontal className="h-4 w-4" />
+                                                        <Link
+                                                            href={`/seleksi/${lowongan.id}`}
+                                                        >
+                                                            <ClipboardCheck className="mr-1.5 h-3.5 w-3.5" />
+                                                            Seleksi
+                                                        </Link>
                                                     </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem asChild>
-                                                        <Link
-                                                            href={`/lowongan/${lowongan.id}`}
-                                                        >
-                                                            Lihat Detail
-                                                        </Link>
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem asChild>
-                                                        <Link
-                                                            href={`/lowongan/${lowongan.id}/edit`}
-                                                        >
-                                                            Edit
-                                                        </Link>
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                        onClick={() =>
-                                                            handleToggle(
-                                                                lowongan.id,
-                                                            )
-                                                        }
+                                                )}
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger
+                                                        asChild
                                                     >
-                                                        {lowongan.status ===
-                                                        'aktif'
-                                                            ? 'Tutup Lowongan'
-                                                            : 'Buka Lowongan'}
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
-                                                    <DropdownMenuItem
-                                                        variant="destructive"
-                                                        onSelect={(e) => {
-                                                            e.preventDefault();
-                                                            // Tunda sampai DropdownMenu selesai unmount
-                                                            // dan mengembalikan fokus, baru buka AlertDialog.
-                                                            // Mencegah konflik aria-hidden/fokus antar Radix portal.
-                                                            setTimeout(() => {
-                                                                setLowonganToDelete(
-                                                                    lowongan,
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                        >
+                                                            <MoreHorizontal className="h-4 w-4" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end">
+                                                        <DropdownMenuItem
+                                                            asChild
+                                                        >
+                                                            <Link
+                                                                href={`/lowongan/${lowongan.id}`}
+                                                            >
+                                                                Lihat Detail
+                                                            </Link>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            asChild
+                                                        >
+                                                            <Link
+                                                                href={`/lowongan/${lowongan.id}/edit`}
+                                                            >
+                                                                Edit
+                                                            </Link>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem
+                                                            onClick={() =>
+                                                                handleToggle(
+                                                                    lowongan.id,
+                                                                )
+                                                            }
+                                                        >
+                                                            {lowongan.status ===
+                                                            'aktif'
+                                                                ? 'Tutup Lowongan'
+                                                                : 'Buka Lowongan'}
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem
+                                                            variant="destructive"
+                                                            onSelect={(e) => {
+                                                                e.preventDefault();
+                                                                // Tunda sampai DropdownMenu selesai unmount
+                                                                // dan mengembalikan fokus, baru buka AlertDialog.
+                                                                // Mencegah konflik aria-hidden/fokus antar Radix portal.
+                                                                setTimeout(
+                                                                    () => {
+                                                                        setLowonganToDelete(
+                                                                            lowongan,
+                                                                        );
+                                                                    },
+                                                                    0,
                                                                 );
-                                                            }, 0);
-                                                        }}
-                                                    >
-                                                        <Trash2 className="mr-2 h-4 w-4" />
-                                                        Hapus Lowongan
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
+                                                            }}
+                                                        >
+                                                            <Trash2 className="mr-2 h-4 w-4" />
+                                                            Hapus Lowongan
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))}

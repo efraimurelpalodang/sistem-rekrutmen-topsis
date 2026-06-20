@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\HRD\LowonganController;
+use App\Http\Controllers\HRD\SeleksiController;
+use App\Http\Controllers\HRD\TesController;
+use App\Http\Controllers\HRD\TopsisController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified', 'role:hrd'])->group(function () {
@@ -17,22 +20,21 @@ Route::middleware(['auth', 'verified', 'role:hrd'])->group(function () {
   Route::patch('/lowongan/{lowongan}/toggle', [LowonganController::class, 'toggle'])->name('hrd.lowongan.toggle');
   Route::delete('/lowongan/{lowongan}', [LowonganController::class, 'destroy'])->name('hrd.lowongan.destroy');
 
-  // Tes Teknis
-  // Route::get('/lowongan/{id}/tes/create', [TesController::class, 'create'])->name('hrd.tes.create');
-  // Route::post('/lowongan/{id}/tes', [TesController::class, 'store'])->name('hrd.tes.store');
-  // Route::get('/lowongan/{id}/tes/soal', [TesController::class, 'soal'])->name('hrd.tes.soal');
-  // Route::post('/lowongan/{id}/tes/soal', [TesController::class, 'storeSoal'])->name('hrd.tes.soal.store');
-  // Route::delete('/lowongan/{id}/tes/soal/{soalId}', [TesController::class, 'destroySoal'])->name('hrd.tes.soal.destroy');
+  // Tes Teknis & Bank Soal
+  Route::get('/lowongan/{lowongan}/tes/create', [TesController::class, 'create'])->name('hrd.tes.create');
+  Route::post('/lowongan/{lowongan}/tes', [TesController::class, 'store'])->name('hrd.tes.store');
+  Route::get('/lowongan/{lowongan}/tes/soal', [TesController::class, 'soal'])->name('hrd.tes.soal');
+  Route::post('/lowongan/{lowongan}/tes/soal', [TesController::class, 'storeSoal'])->name('hrd.tes.soal.store');
+  Route::delete('/lowongan/{lowongan}/tes/soal/{soal}', [TesController::class, 'destroySoal'])->name('hrd.tes.soal.destroy');
 
   // Seleksi Administrasi
-  // Route::get('/seleksi/{lowonganId}', [SeleksiController::class, 'index'])->name('hrd.seleksi.index');
-  // Route::get('/seleksi/{lowonganId}/{lamaranId}', [SeleksiController::class, 'show'])->name('hrd.seleksi.show');
-  // Route::patch('/seleksi/{lamaranId}/lolos', [SeleksiController::class, 'lolos'])->name('hrd.seleksi.lolos');
-  // Route::patch('/seleksi/{lamaranId}/tolak', [SeleksiController::class, 'tolak'])->name('hrd.seleksi.tolak');
+  Route::get('/seleksi/{lowongan}', [SeleksiController::class, 'index'])->name('hrd.seleksi.index');
+  Route::get('/seleksi/{lowongan}/{lamaran}', [SeleksiController::class, 'show'])->name('hrd.seleksi.show');
+  Route::patch('/seleksi/{lamaran}/lolos', [SeleksiController::class, 'lolos'])->name('hrd.seleksi.lolos');
+  Route::patch('/seleksi/{lamaran}/tolak', [SeleksiController::class, 'tolak'])->name('hrd.seleksi.tolak');
 
   // TOPSIS
-  // Route::post('/topsis/{lowonganId}/hitung', [TopsisController::class, 'hitung'])->name('hrd.topsis.hitung');
-  // Route::get('/topsis/{lowonganId}/hasil', [TopsisController::class, 'hasil'])->name('hrd.topsis.hasil');
-  // Route::patch('/topsis/{hasilId}/terima', [TopsisController::class, 'terima'])->name('hrd.topsis.terima');
-  // Route::patch('/topsis/{hasilId}/tolak', [TopsisController::class, 'tolak'])->name('hrd.topsis.tolak');
+  Route::get('/topsis/{lowongan}/hasil', [TopsisController::class, 'hasil'])->name('hrd.topsis.hasil');
+  Route::patch('/topsis/{hasilTopsis}/terima', [TopsisController::class, 'terima'])->name('hrd.topsis.terima');
+  Route::patch('/topsis/{hasilTopsis}/tolak', [TopsisController::class, 'tolak'])->name('hrd.topsis.tolak');
 });

@@ -22,11 +22,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function LowonganCreate() {
     return (
-        // <AppSidebarLayout breadcrumbs={breadcrumbs}>
-        //     <Head title="Buat Lowongan" />
-
         <div className="p-6">
-            {/* <Card className="max-w-2xl"> */}
             <CardHeader>
                 <CardTitle className="text-xl">Buat Lowongan Baru</CardTitle>
                 <CardDescription>
@@ -35,7 +31,11 @@ export default function LowonganCreate() {
             </CardHeader>
 
             <CardContent>
-                <Form action="/lowongan" method="post" className="space-y-6 mt-5">
+                <Form
+                    action="/lowongan"
+                    method="post"
+                    className="mt-5 space-y-6"
+                >
                     {({ processing, errors }) => (
                         <>
                             <div className="grid gap-2">
@@ -128,8 +128,6 @@ export default function LowonganCreate() {
                     )}
                 </Form>
             </CardContent>
-            {/* </Card> */}
         </div>
-        // </AppSidebarLayout>
     );
 }

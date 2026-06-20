@@ -26,7 +26,7 @@ const footerNavItems: NavItem[] = [
     // },
 ];
 
-function getNavItemsByRole(role: string): NavItem[] {
+function getNavItemsForRole(role: string | undefined): NavItem[] {
     const dashboardItem: NavItem = {
         title: 'Dashboard',
         href: dashboard(),
@@ -55,13 +55,13 @@ function getNavItemsByRole(role: string): NavItem[] {
         ];
     }
 
-    // pelamar — sementara hanya dashboard, menambah saat fitur pelamar dibuat
+    // pelamar atau role lain: cuma dashboard
     return [dashboardItem];
 }
 
 export function AppSidebar() {
     const { auth } = usePage<{ auth: Auth }>().props;
-    const mainNavItems = getNavItemsByRole(auth.user.role);
+    const mainNavItems = getNavItemsForRole(auth.user?.role);
 
     return (
         <Sidebar collapsible="icon" variant="inset">
