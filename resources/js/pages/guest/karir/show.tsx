@@ -77,10 +77,10 @@ export default function KarirShow() {
     };
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-5 bg-background">
             <Head title={lowongan.judul} />
 
-            <div className="mx-auto max-w-3xl px-6 py-8">
+            <div className="mx-auto max-w-5xl px-6 pt-5">
                 <Button
                     variant="ghost"
                     size="sm"
@@ -93,53 +93,49 @@ export default function KarirShow() {
                     </Link>
                 </Button>
 
-                <Card>
-                    <CardHeader>
-                        <div className="flex items-start justify-between gap-4">
-                            <div>
-                                <CardTitle className="text-2xl">
-                                    {lowongan.judul}
-                                </CardTitle>
-                                <CardDescription className="mt-1">
-                                    Kuota {lowongan.kuota} orang · Dibuka{' '}
-                                    {formatTanggal(lowongan.tgl_buka)} — Ditutup{' '}
-                                    {formatTanggal(lowongan.tgl_tutup)}
-                                </CardDescription>
-                            </div>
-                            <Badge>Aktif</Badge>
+                <CardHeader>
+                    <div className="flex items-start justify-between gap-4 my-4">
+                        <div>
+                            <CardTitle className="text-2xl capitalize">
+                                {lowongan.judul}
+                            </CardTitle>
+                            <CardDescription className="mt-1">
+                                Kuota {lowongan.kuota} orang · Dibuka{' '}
+                                {formatTanggal(lowongan.tgl_buka)} — Ditutup{' '}
+                                {formatTanggal(lowongan.tgl_tutup)}
+                            </CardDescription>
                         </div>
-                    </CardHeader>
+                        <Badge>Aktif</Badge>
+                    </div>
+                </CardHeader>
 
-                    <CardContent className="space-y-6">
-                        {lowongan.deskripsi && (
-                            <div>
-                                <h3 className="mb-2 font-medium">
-                                    Deskripsi Pekerjaan
-                                </h3>
-                                <p className="text-sm whitespace-pre-line text-muted-foreground">
-                                    {lowongan.deskripsi}
-                                </p>
-                            </div>
-                        )}
-
-                        {lowongan.kualifikasi && (
-                            <div>
-                                <h3 className="mb-2 font-medium">
-                                    Kualifikasi
-                                </h3>
-                                <p className="text-sm whitespace-pre-line text-muted-foreground">
-                                    {lowongan.kualifikasi}
-                                </p>
-                            </div>
-                        )}
-
-                        <Separator />
-
-                        <div className="flex justify-center pt-2">
-                            {renderTombolLamar()}
+                <CardContent className="space-y-6">
+                    {lowongan.deskripsi && (
+                        <div>
+                            <h3 className="mb-2 font-medium">
+                                Deskripsi Pekerjaan
+                            </h3>
+                            <p className="text-sm whitespace-pre-line text-muted-foreground">
+                                {lowongan.deskripsi}
+                            </p>
                         </div>
-                    </CardContent>
-                </Card>
+                    )}
+
+                    {lowongan.kualifikasi && (
+                        <div>
+                            <h3 className="mb-2 font-medium">Kualifikasi</h3>
+                            <p className="text-sm whitespace-pre-line text-muted-foreground">
+                                {lowongan.kualifikasi}
+                            </p>
+                        </div>
+                    )}
+
+                    {/* <Separator /> */}
+
+                    <div className="flex justify-center pt-2">
+                        {renderTombolLamar()}
+                    </div>
+                </CardContent>
             </div>
         </div>
     );

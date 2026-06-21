@@ -77,6 +77,7 @@ class LowonganController extends Controller
   public function edit(Lowongan $lowongan): Response
   {
     $this->authorizeOwnership($lowongan);
+    $this->authorizeEditable($lowongan);
 
     return Inertia::render('hrd/lowongan/edit', [
       'lowongan' => $lowongan,
@@ -89,6 +90,7 @@ class LowonganController extends Controller
   public function update(LowonganRequest $request, Lowongan $lowongan): RedirectResponse
   {
     $this->authorizeOwnership($lowongan);
+    $this->authorizeEditable($lowongan);
 
     $lowongan->update($request->validated());
 
@@ -101,20 +103,29 @@ class LowonganController extends Controller
   }
 
   /**
-   * Buka/tutup status lowongan.
+   * Buka/tutup status lowongan. Saat dibuka kembali, tgl_tutup otomatis
+   * diperpanjang 30 hari dari sekarang -- mencegah lowongan yang sudah
+   * lewat tanggal tutupnya tetap tersembunyi dari halaman karir publik
+   * meskipun statusnya sudah diubah jadi aktif.
    */
   public function toggle(Lowongan $lowongan): RedirectResponse
   {
     $this->authorizeOwnership($lowongan);
 
-    $lowongan->update([
-      'status' => $lowongan->status === 'aktif' ? 'ditutup' : 'aktif',
-    ]);
+    $statusBaru = $lowongan->status === 'aktif' ? 'ditutup' : 'aktif';
+
+    $update = ['status' => $statusBaru];
+
+    if ($statusBaru === 'aktif') {
+      $update['tgl_tutup'] = now()->addDays(30)->toDateString();
+    }
+
+    $lowongan->update($update);
 
     Inertia::flash('toast', [
       'type' => 'success',
-      'message' => $lowongan->status === 'aktif'
-        ? 'Lowongan dibuka kembali.'
+      'message' => $statusBaru === 'aktif'
+        ? 'Lowongan dibuka kembali. Tanggal tutup diperpanjang hingga ' . now()->addDays(30)->translatedFormat('d F Y') . '.'
         : 'Lowongan ditutup.',
     ]);
 
@@ -155,6 +166,18 @@ class LowonganController extends Controller
   {
     if ($lowongan->pengguna_id !== request()->user()->id) {
       abort(403, 'Anda tidak memiliki akses ke lowongan ini.');
+    }
+  }
+
+  /**
+   * Pastikan lowongan masih berstatus aktif sebelum boleh diedit.
+   * Lowongan yang sudah ditutup tidak dapat diubah lagi untuk
+   * menjaga konsistensi data selama proses seleksi & TOPSIS berjalan.
+   */
+  private function authorizeEditable(Lowongan $lowongan): void
+  {
+    if ($lowongan->status !== 'aktif') {
+      abort(403, 'Lowongan yang sudah ditutup tidak dapat diedit.');
     }
   }
 }
