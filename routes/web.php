@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth\OcrKtpController;
+use App\Http\Controllers\Auth\CekNikController;
 use App\Http\Controllers\Guest\LowonganController as GuestLowonganController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -11,8 +11,8 @@ Route::inertia('/', 'welcome')->name('home');
 Route::get('/karir', [GuestLowonganController::class, 'index'])->name('karir.index');
 Route::get('/karir/{lowongan}', [GuestLowonganController::class, 'show'])->name('karir.show');
 
-// OCR KTP saat register
-Route::post('/ocr-ktp', [OcrKtpController::class, 'proses'])->name('ocr-ktp');
+// Cek NIK duplikat saat register (OCR KTP berjalan di browser via Tesseract.js)
+Route::post('/cek-nik', [CekNikController::class, 'cek'])->name('cek-nik');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function (Request $request) {

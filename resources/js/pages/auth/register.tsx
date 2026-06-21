@@ -19,8 +19,15 @@ type Props = {
 };
 
 export default function Register({ passwordRules }: Props) {
-    const { isProcessing, error, data, fotoPreview, prosesFoto, reset } =
-        useOcrKtp();
+    const {
+        isProcessing,
+        progress,
+        error,
+        data,
+        fotoPreview,
+        prosesFoto,
+        reset,
+    } = useOcrKtp();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Setelah OCR berhasil (atau gagal tapi pelamar tetap lanjut koreksi
@@ -101,7 +108,7 @@ export default function Register({ passwordRules }: Props) {
                             {isProcessing ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Memindai KTP...
+                                    Memindai KTP... {progress}%
                                 </>
                             ) : (
                                 <>
@@ -112,6 +119,15 @@ export default function Register({ passwordRules }: Props) {
                                 </>
                             )}
                         </Button>
+
+                        {isProcessing && (
+                            <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                                <div
+                                    className="h-full bg-primary transition-all duration-300"
+                                    style={{ width: `${progress}%` }}
+                                />
+                            </div>
+                        )}
 
                         <div className="space-y-1 rounded-md bg-muted/50 p-3 text-xs text-muted-foreground">
                             <p className="font-medium">
@@ -124,6 +140,11 @@ export default function Register({ passwordRules }: Props) {
                                     terpotong
                                 </li>
                                 <li>Hindari pantulan cahaya/silau pada KTP</li>
+                                <li>
+                                    Proses pemindaian berjalan langsung di
+                                    perangkat Anda dan membutuhkan waktu
+                                    beberapa detik
+                                </li>
                             </ul>
                         </div>
                     </div>
