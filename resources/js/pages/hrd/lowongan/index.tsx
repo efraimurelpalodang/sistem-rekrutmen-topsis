@@ -84,7 +84,6 @@ export default function LowonganIndex() {
     return (
         <div className="p-6">
             <Head title="Daftar Lowongan" />
-
             <CardHeader className="px-0">
                 <div className="flex items-center justify-between">
                     <div>
@@ -104,7 +103,7 @@ export default function LowonganIndex() {
                 </div>
             </CardHeader>
 
-            <CardContent className="px-0">
+            <CardContent className="px-0 mt-6">
                 {lowongans.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center">
                         <p className="text-muted-foreground">
@@ -207,15 +206,18 @@ export default function LowonganIndex() {
                                                                 Lihat Detail
                                                             </Link>
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            asChild
-                                                        >
-                                                            <Link
-                                                                href={`/lowongan/${lowongan.id}/edit`}
+                                                        {lowongan.status ===
+                                                            'aktif' && (
+                                                            <DropdownMenuItem
+                                                                asChild
                                                             >
-                                                                Edit
-                                                            </Link>
-                                                        </DropdownMenuItem>
+                                                                <Link
+                                                                    href={`/lowongan/${lowongan.id}/edit`}
+                                                                >
+                                                                    Edit
+                                                                </Link>
+                                                            </DropdownMenuItem>
+                                                        )}
                                                         <DropdownMenuItem
                                                             onClick={() =>
                                                                 handleToggle(
@@ -314,3 +316,11 @@ export default function LowonganIndex() {
         </div>
     );
 }
+
+LowonganIndex.layout = {
+    breadcrumbs: [
+        {
+            title: 'Daftar Lowongan',
+        },
+    ],
+};

@@ -1,5 +1,5 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Check, Eye, X } from 'lucide-react';
+import { ArrowLeft, Check, Eye, X } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -100,6 +100,13 @@ export default function SeleksiIndex() {
     return (
         <div className="p-6">
             <Head title={`Seleksi - ${lowongan.judul}`} />
+
+            <Button variant="ghost" size="sm" asChild className="mb-4 -ml-2">
+                <Link href={`/lowongan/${lowongan.id}`}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Kembali ke detail lowongan
+                </Link>
+            </Button>
 
             <CardHeader className="px-0">
                 <CardTitle className="text-xl">Seleksi Administrasi</CardTitle>
@@ -295,3 +302,11 @@ export default function SeleksiIndex() {
         </div>
     );
 }
+
+SeleksiIndex.layout = {
+    breadcrumbs: [
+        {
+            title: 'Seleksi Administrasi',
+        },
+    ],
+};

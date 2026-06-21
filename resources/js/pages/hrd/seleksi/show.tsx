@@ -124,206 +124,195 @@ export default function SeleksiShow() {
                 </Link>
             </Button>
 
-            <Card>
-                <CardHeader>
-                    <div className="flex items-start justify-between">
-                        <div>
-                            <CardTitle className="text-xl">
-                                {pengguna.nama}
-                            </CardTitle>
-                            <CardDescription>
-                                Melamar untuk {lowongan.judul}
-                            </CardDescription>
-                        </div>
-                        <Badge>{lamaran.status_label}</Badge>
-                    </div>
-                </CardHeader>
-
-                <CardContent className="space-y-6">
+            <CardHeader>
+                <div className="flex items-start justify-between">
                     <div>
-                        <h3 className="mb-3 text-sm font-medium">Data Diri</h3>
+                        <CardTitle className="text-xl">
+                            {pengguna.nama}
+                        </CardTitle>
+                        <CardDescription>
+                            Melamar untuk {lowongan.judul}
+                        </CardDescription>
+                    </div>
+                    <Badge>{lamaran.status_label}</Badge>
+                </div>
+            </CardHeader>
+
+            <CardContent className="space-y-6">
+                <div>
+                    <h3 className="mb-3 text-sm font-medium">Data Diri</h3>
+                    <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                        <div>
+                            <dt className="text-muted-foreground">NIK</dt>
+                            <dd>{pengguna.nik ?? '-'}</dd>
+                        </div>
+                        <div>
+                            <dt className="text-muted-foreground">Email</dt>
+                            <dd>{pengguna.email}</dd>
+                        </div>
+                        <div>
+                            <dt className="text-muted-foreground">
+                                Tanggal Lahir
+                            </dt>
+                            <dd>{formatTanggal(pengguna.tgl_lahir)}</dd>
+                        </div>
+                        <div>
+                            <dt className="text-muted-foreground">
+                                Jenis Kelamin
+                            </dt>
+                            <dd>
+                                {pengguna.jenis_kelamin === 'L'
+                                    ? 'Laki-laki'
+                                    : pengguna.jenis_kelamin === 'P'
+                                      ? 'Perempuan'
+                                      : '-'}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt className="text-muted-foreground">No. HP</dt>
+                            <dd>{pengguna.no_hp ?? '-'}</dd>
+                        </div>
+                        <div className="col-span-2">
+                            <dt className="text-muted-foreground">Alamat</dt>
+                            <dd>{pengguna.alamat ?? '-'}</dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <Separator />
+
+                <div>
+                    <h3 className="mb-3 text-sm font-medium">Pendidikan</h3>
+                    {profile ? (
                         <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                             <div>
-                                <dt className="text-muted-foreground">NIK</dt>
-                                <dd>{pengguna.nik ?? '-'}</dd>
-                            </div>
-                            <div>
-                                <dt className="text-muted-foreground">Email</dt>
-                                <dd>{pengguna.email}</dd>
+                                <dt className="text-muted-foreground">
+                                    Jenjang
+                                </dt>
+                                <dd>{profile.pendidikan}</dd>
                             </div>
                             <div>
                                 <dt className="text-muted-foreground">
-                                    Tanggal Lahir
+                                    Jurusan
                                 </dt>
-                                <dd>{formatTanggal(pengguna.tgl_lahir)}</dd>
+                                <dd>{profile.jurusan ?? '-'}</dd>
                             </div>
                             <div>
                                 <dt className="text-muted-foreground">
-                                    Jenis Kelamin
+                                    Institusi
                                 </dt>
-                                <dd>
-                                    {pengguna.jenis_kelamin === 'L'
-                                        ? 'Laki-laki'
-                                        : pengguna.jenis_kelamin === 'P'
-                                          ? 'Perempuan'
-                                          : '-'}
-                                </dd>
+                                <dd>{profile.institusi ?? '-'}</dd>
                             </div>
                             <div>
                                 <dt className="text-muted-foreground">
-                                    No. HP
+                                    Tahun Lulus
                                 </dt>
-                                <dd>{pengguna.no_hp ?? '-'}</dd>
+                                <dd>{profile.tahun_lulus ?? '-'}</dd>
                             </div>
-                            <div className="col-span-2">
+                            <div>
                                 <dt className="text-muted-foreground">
-                                    Alamat
+                                    Nilai Akademik (
+                                    {profile.tipe_nilai === 'ipk'
+                                        ? 'IPK'
+                                        : 'Rapor'}
+                                    )
                                 </dt>
-                                <dd>{pengguna.alamat ?? '-'}</dd>
+                                <dd>{profile.nilai_akademik ?? '-'}</dd>
                             </div>
                         </dl>
-                    </div>
+                    ) : (
+                        <p className="text-sm text-muted-foreground">
+                            Data pendidikan belum dilengkapi.
+                        </p>
+                    )}
+                </div>
 
-                    <Separator />
+                <Separator />
 
-                    <div>
-                        <h3 className="mb-3 text-sm font-medium">Pendidikan</h3>
-                        {profile ? (
-                            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                                <div>
-                                    <dt className="text-muted-foreground">
-                                        Jenjang
-                                    </dt>
-                                    <dd>{profile.pendidikan}</dd>
+                <div>
+                    <h3 className="mb-3 text-sm font-medium">
+                        Pengalaman Kerja
+                    </h3>
+                    {pengguna.pengalaman_kerjas.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">
+                            Tidak ada pengalaman kerja yang dicantumkan.
+                        </p>
+                    ) : (
+                        <div className="space-y-3">
+                            {pengguna.pengalaman_kerjas.map((peng) => (
+                                <div
+                                    key={peng.id}
+                                    className="rounded-md border p-3 text-sm"
+                                >
+                                    <p className="font-medium">
+                                        {peng.posisi} — {peng.nama_perusahaan}
+                                    </p>
+                                    <p className="text-muted-foreground">
+                                        {formatTanggal(peng.bulan_mulai)} —{' '}
+                                        {peng.bulan_selesai
+                                            ? formatTanggal(peng.bulan_selesai)
+                                            : 'Sekarang'}
+                                    </p>
                                 </div>
-                                <div>
-                                    <dt className="text-muted-foreground">
-                                        Jurusan
-                                    </dt>
-                                    <dd>{profile.jurusan ?? '-'}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-muted-foreground">
-                                        Institusi
-                                    </dt>
-                                    <dd>{profile.institusi ?? '-'}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-muted-foreground">
-                                        Tahun Lulus
-                                    </dt>
-                                    <dd>{profile.tahun_lulus ?? '-'}</dd>
-                                </div>
-                                <div>
-                                    <dt className="text-muted-foreground">
-                                        Nilai Akademik (
-                                        {profile.tipe_nilai === 'ipk'
-                                            ? 'IPK'
-                                            : 'Rapor'}
-                                        )
-                                    </dt>
-                                    <dd>{profile.nilai_akademik ?? '-'}</dd>
-                                </div>
-                            </dl>
-                        ) : (
-                            <p className="text-sm text-muted-foreground">
-                                Data pendidikan belum dilengkapi.
-                            </p>
-                        )}
-                    </div>
-
-                    <Separator />
-
-                    <div>
-                        <h3 className="mb-3 text-sm font-medium">
-                            Pengalaman Kerja
-                        </h3>
-                        {pengguna.pengalaman_kerjas.length === 0 ? (
-                            <p className="text-sm text-muted-foreground">
-                                Tidak ada pengalaman kerja yang dicantumkan.
-                            </p>
-                        ) : (
-                            <div className="space-y-3">
-                                {pengguna.pengalaman_kerjas.map((peng) => (
-                                    <div
-                                        key={peng.id}
-                                        className="rounded-md border p-3 text-sm"
-                                    >
-                                        <p className="font-medium">
-                                            {peng.posisi} —{' '}
-                                            {peng.nama_perusahaan}
-                                        </p>
-                                        <p className="text-muted-foreground">
-                                            {formatTanggal(peng.bulan_mulai)} —{' '}
-                                            {peng.bulan_selesai
-                                                ? formatTanggal(
-                                                      peng.bulan_selesai,
-                                                  )
-                                                : 'Sekarang'}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-                    <Separator />
-
-                    <div>
-                        <h3 className="mb-3 text-sm font-medium">Dokumen</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {profile?.cv_path ? (
-                                <Button variant="outline" size="sm" asChild>
-                                    <a
-                                        href={`/storage-pelamar/cv/${lamaran.id}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        Lihat CV
-                                    </a>
-                                </Button>
-                            ) : (
-                                <Badge variant="secondary">
-                                    CV belum diunggah
-                                </Badge>
-                            )}
-                            {profile?.foto_ktp_path ? (
-                                <Button variant="outline" size="sm" asChild>
-                                    <a
-                                        href={`/storage-pelamar/ktp/${lamaran.id}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        Lihat Foto KTP
-                                    </a>
-                                </Button>
-                            ) : (
-                                <Badge variant="secondary">
-                                    KTP belum diunggah
-                                </Badge>
-                            )}
-                            {profile?.foto_ijazah_path ? (
-                                <Button variant="outline" size="sm" asChild>
-                                    <a
-                                        href={`/storage-pelamar/ijazah/${lamaran.id}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        Lihat Ijazah
-                                    </a>
-                                </Button>
-                            ) : (
-                                <Badge variant="secondary">
-                                    Ijazah belum diunggah
-                                </Badge>
-                            )}
+                            ))}
                         </div>
+                    )}
+                </div>
+
+                <Separator />
+
+                <div>
+                    <h3 className="mb-3 text-sm font-medium">Dokumen</h3>
+                    <div className="flex flex-wrap gap-2">
+                        {profile?.cv_path ? (
+                            <Button variant="outline" size="sm" asChild>
+                                <a
+                                    href={`/storage-pelamar/cv/${lamaran.id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Lihat CV
+                                </a>
+                            </Button>
+                        ) : (
+                            <Badge variant="secondary">CV belum diunggah</Badge>
+                        )}
+                        {profile?.foto_ktp_path ? (
+                            <Button variant="outline" size="sm" asChild>
+                                <a
+                                    href={`/storage-pelamar/ktp/${lamaran.id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Lihat Foto KTP
+                                </a>
+                            </Button>
+                        ) : (
+                            <Badge variant="secondary">
+                                KTP belum diunggah
+                            </Badge>
+                        )}
+                        {profile?.foto_ijazah_path ? (
+                            <Button variant="outline" size="sm" asChild>
+                                <a
+                                    href={`/storage-pelamar/ijazah/${lamaran.id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Lihat Ijazah
+                                </a>
+                            </Button>
+                        ) : (
+                            <Badge variant="secondary">
+                                Ijazah belum diunggah
+                            </Badge>
+                        )}
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </CardContent>
 
             {!sudahDiproses && (
-                <div className="flex gap-3">
+                <div className="flex gap-3 ml-6">
                     <Button onClick={handleLoloskan}>
                         <Check className="mr-2 h-4 w-4" />
                         Loloskan ke Tes Teknis
@@ -384,3 +373,11 @@ export default function SeleksiShow() {
         </div>
     );
 }
+
+SeleksiShow.layout = {
+    breadcrumbs: [
+        {
+            title: 'Detail Pelamar Seleksi Administrasi',
+        },
+    ],
+};

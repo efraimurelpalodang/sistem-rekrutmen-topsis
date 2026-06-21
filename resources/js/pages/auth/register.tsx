@@ -1,11 +1,16 @@
 import { Form, Head } from '@inertiajs/react';
+import { Loader2, ScanLine, Upload } from 'lucide-react';
+import { useRef, useState } from 'react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
+import { useOcrKtp } from '@/hooks/use-ocr-ktp';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
 
@@ -14,6 +19,125 @@ type Props = {
 };
 
 export default function Register({ passwordRules }: Props) {
+    const { isProcessing, error, data, fotoPreview, prosesFoto, reset } =
+        useOcrKtp();
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Setelah OCR berhasil (atau gagal tapi pelamar tetap lanjut koreksi
+    // manual untuk field yang berhasil terbaca), tampilkan form lengkap.
+    const [showForm, setShowForm] = useState(false);
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const result = await prosesFoto(file);
+
+        // NIK wajib terbaca sukses sebelum form muncul (sesuai kebijakan:
+        // OCR wajib, tidak ada opsi isi manual penuh tanpa upload KTP).
+        if (result.success) {
+            setShowForm(true);
+        }
+    };
+
+    const handleFotoUlang = () => {
+        reset();
+        setShowForm(false);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
+    // ── Tahap 1: Upload & Scan KTP ──────────────────────────────────
+    if (!showForm) {
+        return (
+            <>
+                <Head title="Daftar" />
+                <div className="space-y-6">
+                    <div className="space-y-1 text-center">
+                        <ScanLine className="mx-auto h-10 w-10 text-muted-foreground" />
+                        <p className="text-sm text-muted-foreground">
+                            Unggah foto KTP Anda untuk memulai pendaftaran. Data
+                            akan terisi otomatis dari hasil pemindaian.
+                        </p>
+                    </div>
+
+                    {fotoPreview && (
+                        <Card>
+                            <CardContent className="pt-6">
+                                <img
+                                    src={fotoPreview}
+                                    alt="Preview KTP"
+                                    className="w-full rounded-md border"
+                                />
+                            </CardContent>
+                        </Card>
+                    )}
+
+                    {error && (
+                        <Alert variant="destructive">
+                            <AlertTitle>Gagal membaca KTP</AlertTitle>
+                            <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                    )}
+
+                    <div className="space-y-3">
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            capture="environment"
+                            className="hidden"
+                            id="foto-ktp"
+                            onChange={handleFileChange}
+                            disabled={isProcessing}
+                        />
+                        <Button
+                            type="button"
+                            className="w-full"
+                            disabled={isProcessing}
+                            onClick={() => fileInputRef.current?.click()}
+                        >
+                            {isProcessing ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Memindai KTP...
+                                </>
+                            ) : (
+                                <>
+                                    <Upload className="mr-2 h-4 w-4" />
+                                    {error
+                                        ? 'Coba Foto Ulang'
+                                        : 'Unggah Foto KTP'}
+                                </>
+                            )}
+                        </Button>
+
+                        <div className="space-y-1 rounded-md bg-muted/50 p-3 text-xs text-muted-foreground">
+                            <p className="font-medium">
+                                Tips agar foto terbaca dengan baik:
+                            </p>
+                            <ul className="list-inside list-disc space-y-0.5">
+                                <li>Pastikan pencahayaan cukup terang</li>
+                                <li>
+                                    Foto KTP secara lurus, tidak miring atau
+                                    terpotong
+                                </li>
+                                <li>Hindari pantulan cahaya/silau pada KTP</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="text-center text-sm text-muted-foreground">
+                        Sudah punya akun?{' '}
+                        <TextLink href={login()}>Masuk</TextLink>
+                    </div>
+                </div>
+            </>
+        );
+    }
+
+    // ── Tahap 2: Form lengkap, sudah terisi otomatis dari OCR ───────
     return (
         <>
             <Head title="Daftar" />
@@ -25,6 +149,22 @@ export default function Register({ passwordRules }: Props) {
             >
                 {({ processing, errors }) => (
                     <>
+                        <Alert>
+                            <ScanLine className="h-4 w-4" />
+                            <AlertTitle>Data terisi dari KTP</AlertTitle>
+                            <AlertDescription>
+                                Periksa kembali data di bawah ini. Anda dapat
+                                mengoreksi jika ada kesalahan baca.{' '}
+                                <button
+                                    type="button"
+                                    onClick={handleFotoUlang}
+                                    className="font-medium underline"
+                                >
+                                    Foto ulang KTP
+                                </button>
+                            </AlertDescription>
+                        </Alert>
+
                         <div className="grid gap-6">
                             <div className="grid gap-2">
                                 <Label htmlFor="nik">NIK</Label>
@@ -32,11 +172,9 @@ export default function Register({ passwordRules }: Props) {
                                     id="nik"
                                     type="text"
                                     required
-                                    autoFocus
-                                    tabIndex={1}
                                     name="nik"
-                                    placeholder="16 digit NIK sesuai KTP"
                                     maxLength={16}
+                                    defaultValue={data?.nik ?? ''}
                                 />
                                 <InputError
                                     message={errors.nik}
@@ -50,10 +188,10 @@ export default function Register({ passwordRules }: Props) {
                                     id="nama"
                                     type="text"
                                     required
-                                    tabIndex={2}
+                                    autoFocus
                                     autoComplete="name"
                                     name="nama"
-                                    placeholder="Nama lengkap sesuai KTP"
+                                    defaultValue={data?.nama ?? ''}
                                 />
                                 <InputError
                                     message={errors.nama}
@@ -67,7 +205,6 @@ export default function Register({ passwordRules }: Props) {
                                     id="email"
                                     type="email"
                                     required
-                                    tabIndex={3}
                                     autoComplete="email"
                                     name="email"
                                     placeholder="email@contoh.com"
@@ -84,8 +221,8 @@ export default function Register({ passwordRules }: Props) {
                                         id="tgl_lahir"
                                         type="date"
                                         required
-                                        tabIndex={4}
                                         name="tgl_lahir"
+                                        defaultValue={data?.tgl_lahir ?? ''}
                                     />
                                     <InputError message={errors.tgl_lahir} />
                                 </div>
@@ -98,7 +235,7 @@ export default function Register({ passwordRules }: Props) {
                                         id="jenis_kelamin"
                                         name="jenis_kelamin"
                                         required
-                                        tabIndex={5}
+                                        defaultValue={data?.jenis_kelamin ?? ''}
                                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
                                     >
                                         <option value="">Pilih...</option>
@@ -117,9 +254,8 @@ export default function Register({ passwordRules }: Props) {
                                     id="alamat"
                                     type="text"
                                     required
-                                    tabIndex={6}
                                     name="alamat"
-                                    placeholder="Alamat lengkap sesuai KTP"
+                                    defaultValue={data?.alamat ?? ''}
                                 />
                                 <InputError message={errors.alamat} />
                             </div>
@@ -134,7 +270,6 @@ export default function Register({ passwordRules }: Props) {
                                 <Input
                                     id="no_hp"
                                     type="tel"
-                                    tabIndex={7}
                                     name="no_hp"
                                     placeholder="08xxxxxxxxxx"
                                 />
@@ -146,7 +281,6 @@ export default function Register({ passwordRules }: Props) {
                                 <PasswordInput
                                     id="password"
                                     required
-                                    tabIndex={8}
                                     autoComplete="new-password"
                                     name="password"
                                     placeholder="Kata sandi"
@@ -162,7 +296,6 @@ export default function Register({ passwordRules }: Props) {
                                 <PasswordInput
                                     id="password_confirmation"
                                     required
-                                    tabIndex={9}
                                     autoComplete="new-password"
                                     name="password_confirmation"
                                     placeholder="Ulangi kata sandi"
@@ -176,7 +309,6 @@ export default function Register({ passwordRules }: Props) {
                             <Button
                                 type="submit"
                                 className="mt-2 w-full"
-                                tabIndex={10}
                                 data-test="register-user-button"
                             >
                                 {processing && <Spinner />}
@@ -186,9 +318,7 @@ export default function Register({ passwordRules }: Props) {
 
                         <div className="text-center text-sm text-muted-foreground">
                             Sudah punya akun?{' '}
-                            <TextLink href={login()} tabIndex={11}>
-                                Masuk
-                            </TextLink>
+                            <TextLink href={login()}>Masuk</TextLink>
                         </div>
                     </>
                 )}
@@ -199,5 +329,5 @@ export default function Register({ passwordRules }: Props) {
 
 Register.layout = {
     title: 'Buat Akun Baru',
-    description: 'Isi data diri Anda untuk mendaftar sebagai pelamar',
+    description: 'Unggah KTP untuk mendaftar sebagai pelamar',
 };

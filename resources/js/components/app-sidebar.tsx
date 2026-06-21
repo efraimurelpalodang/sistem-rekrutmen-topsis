@@ -55,6 +55,17 @@ function getNavItemsForRole(role: string | undefined): NavItem[] {
         ];
     }
 
+    if (role === 'pelamar') {
+        return [
+            dashboardItem,
+            {
+                title: 'Profil Saya',
+                href: '/profil',
+                icon: Briefcase,
+            },
+        ];
+    }
+
     // pelamar atau role lain: cuma dashboard
     return [dashboardItem];
 }

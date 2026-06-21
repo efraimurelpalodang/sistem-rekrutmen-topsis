@@ -1,5 +1,5 @@
 import { Form, Head, Link, router, usePage } from '@inertiajs/react';
-import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Plus, Send, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import {
     AlertDialog,
@@ -67,6 +67,7 @@ export default function SoalManager() {
 
     const [showForm, setShowForm] = useState(false);
     const [soalToDelete, setSoalToDelete] = useState<Soal | null>(null);
+    const [showBukaTesDialog, setShowBukaTesDialog] = useState(false);
 
     const handleDelete = () => {
         if (!soalToDelete) return;
@@ -75,6 +76,17 @@ export default function SoalManager() {
             preserveScroll: true,
             onFinish: () => setSoalToDelete(null),
         });
+    };
+
+    const handleBukaTes = () => {
+        router.post(
+            `/lowongan/${lowongan.id}/tes/buka`,
+            {},
+            {
+                preserveScroll: true,
+                onFinish: () => setShowBukaTesDialog(false),
+            },
+        );
     };
 
     const isCukup = soals.length >= tesTeknis.jumlah_soal;
@@ -106,6 +118,18 @@ export default function SoalManager() {
                             >
                                 {soals.length} / {tesTeknis.jumlah_soal} soal
                             </Badge>
+                            <Button
+                                variant="outline"
+                                disabled={!isCukup}
+                                onClick={() =>
+                                    setTimeout(
+                                        () => setShowBukaTesDialog(true),
+                                        0,
+                                    )
+                                }
+                            >
+                                Buka Tes
+                            </Button>
                             <Button onClick={() => setShowForm(!showForm)}>
                                 <Plus className="mr-2 h-4 w-4" />
                                 Tambah Soal
@@ -351,6 +375,58 @@ export default function SoalManager() {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
+
+            <AlertDialog
+                open={showBukaTesDialog}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        if (document.activeElement instanceof HTMLElement) {
+                            document.activeElement.blur();
+                        }
+                        setShowBukaTesDialog(false);
+                    }
+                }}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            Buka tes untuk semua pelamar yang lolos
+                            administrasi?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Semua pelamar dengan status &quot;Lolos Seleksi
+                            Administrasi&quot; pada lowongan ini akan dapat
+                            mengakses dan mengerjakan tes teknis. Tindakan ini
+                            tidak dapat dibatalkan.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel
+                            onClick={() => {
+                                if (
+                                    document.activeElement instanceof
+                                    HTMLElement
+                                ) {
+                                    document.activeElement.blur();
+                                }
+                            }}
+                        >
+                            Batal
+                        </AlertDialogCancel>
+                        <AlertDialogAction onClick={handleBukaTes}>
+                            Ya, Buka Tes
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
+
+SoalManager.layout = {
+    breadcrumbs: [
+        {
+            title: 'Manajemen Soal Tes',
+        },
+    ],
+};

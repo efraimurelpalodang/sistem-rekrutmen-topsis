@@ -20,11 +20,11 @@ class PenggunaSeeder extends Seeder
             'role'     => 'admin',
         ]);
 
-        Pengguna::create([
-            'nama'     => 'HRD',
-            'email'    => 'hrd@spk.test',
-            'password' => Hash::make('password'),
-            'role'     => 'hrd',
-        ]);
+        // Pengguna::create([
+        //     'nama'     => 'HRD',
+        //     'email'    => 'hrd@spk.test',
+        //     'password' => Hash::make('password'),
+        //     'role'     => 'hrd',
+        // ]);
     }
 }

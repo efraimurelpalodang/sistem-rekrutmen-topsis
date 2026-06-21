@@ -131,3 +131,11 @@ export default function LowonganCreate() {
         </div>
     );
 }
+
+LowonganCreate.layout = {
+    breadcrumbs: [
+        {
+            title: 'Tambah Lowongan',
+        },
+    ],
+};

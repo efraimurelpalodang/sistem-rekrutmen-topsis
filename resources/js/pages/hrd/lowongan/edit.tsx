@@ -157,3 +157,11 @@ export default function LowonganEdit() {
         </div>
     );
 }
+
+LowonganEdit.layout = {
+    breadcrumbs: [
+        {
+            title: 'Edit Lowongan',
+        },
+    ],
+};

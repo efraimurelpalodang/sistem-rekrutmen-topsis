@@ -1,5 +1,5 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import { Pencil } from 'lucide-react';
+import { ArrowLeft, Pencil } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -85,6 +85,14 @@ export default function LowonganShow() {
 
     return (
         <div className="space-y-6 p-6">
+            <Head title={lowongan.judul} />
+            <Button variant="ghost" size="sm" asChild className="-ml-2">
+                <Link href="/lowongan">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Kembali ke daftar lowongan
+                </Link>
+            </Button>
+
             <Card>
                 <CardHeader>
                     <div className="flex items-start justify-between">
@@ -111,12 +119,14 @@ export default function LowonganShow() {
                                 {lowongan.kuota} orang
                             </CardDescription>
                         </div>
-                        <Button variant="outline" asChild>
-                            <Link href={`/lowongan/${lowongan.id}/edit`}>
-                                <Pencil className="mr-2 h-4 w-4" />
-                                Edit
-                            </Link>
-                        </Button>
+                        {lowongan.status === 'aktif' && (
+                            <Button variant="outline" asChild>
+                                <Link href={`/lowongan/${lowongan.id}/edit`}>
+                                    <Pencil className="mr-2 h-4 w-4" />
+                                    Edit
+                                </Link>
+                            </Button>
+                        )}
                     </div>
                 </CardHeader>
 
@@ -252,3 +262,11 @@ export default function LowonganShow() {
         </div>
     );
 }
+
+LowonganShow.layout = {
+    breadcrumbs: [
+        {
+            title: 'Detail Lowongan',
+        },
+    ],
+};

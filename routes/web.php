@@ -1,13 +1,18 @@
 <?php
 
+use App\Http\Controllers\Auth\OcrKtpController;
+use App\Http\Controllers\Guest\LowonganController as GuestLowonganController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
 
-// Halaman publik karir akan ditambahkan di sini saat BerandaController & LowonganController dibuat
-// Route::get('/karir', [LowonganController::class, 'index'])->name('karir.index');
-// Route::get('/karir/{id}', [LowonganController::class, 'show'])->name('karir.show');
+// Halaman publik karir
+Route::get('/karir', [GuestLowonganController::class, 'index'])->name('karir.index');
+Route::get('/karir/{lowongan}', [GuestLowonganController::class, 'show'])->name('karir.show');
+
+// OCR KTP saat register
+Route::post('/ocr-ktp', [OcrKtpController::class, 'proses'])->name('ocr-ktp');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function (Request $request) {

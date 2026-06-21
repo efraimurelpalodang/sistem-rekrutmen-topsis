@@ -26,6 +26,7 @@ Route::middleware(['auth', 'verified', 'role:hrd'])->group(function () {
   Route::get('/lowongan/{lowongan}/tes/soal', [TesController::class, 'soal'])->name('hrd.tes.soal');
   Route::post('/lowongan/{lowongan}/tes/soal', [TesController::class, 'storeSoal'])->name('hrd.tes.soal.store');
   Route::delete('/lowongan/{lowongan}/tes/soal/{soal}', [TesController::class, 'destroySoal'])->name('hrd.tes.soal.destroy');
+  Route::post('/lowongan/{lowongan}/tes/buka', [TesController::class, 'bukaTes'])->name('hrd.tes.buka');
 
   // Seleksi Administrasi
   Route::get('/seleksi/{lowongan}', [SeleksiController::class, 'index'])->name('hrd.seleksi.index');

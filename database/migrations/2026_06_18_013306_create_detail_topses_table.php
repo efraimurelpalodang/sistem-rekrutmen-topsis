@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('detail_topses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hasil_topsis_id')->constrained('hasil_topsis')->cascadeOnDelete();
+            $table->foreignId('hasil_topsis_id')->constrained('hasil_topses')->cascadeOnDelete();
             $table->foreignId('kriteria_id')->constrained('kriterias')->cascadeOnDelete();
             $table->decimal('nilai_asli', 10, 4)->comment('Nilai mentah pelamar untuk kriteria ini');
             $table->decimal('nilai_normalisasi', 10, 8)->comment('Nilai setelah dinormalisasi (r_ij)');

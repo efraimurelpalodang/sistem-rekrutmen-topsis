@@ -5,6 +5,7 @@ namespace App\Http\Controllers\HRD;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\HRD\SoalRequest;
 use App\Http\Requests\HRD\TesTeknisRequest;
+use App\Models\Lamaran;
 use App\Models\Lowongan;
 use App\Models\Soal;
 use App\Models\TesTeknis;
@@ -62,7 +63,7 @@ class TesController extends Controller
   /**
    * Tampilkan halaman kelola bank soal.
    */
-  public function soal(Lowongan $lowongan): Response
+  public function soal(Lowongan $lowongan): Response|RedirectResponse
   {
     $this->authorizeOwnership($lowongan);
 
@@ -119,6 +120,57 @@ class TesController extends Controller
     Inertia::flash('toast', [
       'type' => 'success',
       'message' => 'Soal berhasil dihapus.',
+    ]);
+
+    return back();
+  }
+
+  /**
+   * Buka tes teknis secara massal untuk semua pelamar yang sudah
+   * lolos seleksi administrasi (status lolos_admin) pada lowongan ini.
+   * Mengubah status mereka menjadi menunggu_tes sehingga dapat mengakses
+   * halaman pengerjaan tes.
+   */
+  public function bukaTes(Lowongan $lowongan): RedirectResponse
+  {
+    $this->authorizeOwnership($lowongan);
+
+    if (! $lowongan->tesTeknis) {
+      Inertia::flash('toast', [
+        'type' => 'error',
+        'message' => 'Buat tes teknis terlebih dahulu sebelum membuka tes untuk pelamar.',
+      ]);
+
+      return back();
+    }
+
+    $jumlahSoal = $lowongan->tesTeknis->soals()->count();
+
+    if ($jumlahSoal < $lowongan->tesTeknis->jumlah_soal) {
+      Inertia::flash('toast', [
+        'type' => 'error',
+        'message' => "Bank soal belum cukup ({$jumlahSoal}/{$lowongan->tesTeknis->jumlah_soal}). Lengkapi bank soal terlebih dahulu.",
+      ]);
+
+      return back();
+    }
+
+    $jumlahDibuka = Lamaran::where('lowongan_id', $lowongan->id)
+      ->where('status', Lamaran::STATUS_LOLOS_ADMIN)
+      ->update(['status' => Lamaran::STATUS_MENUNGGU_TES]);
+
+    if ($jumlahDibuka === 0) {
+      Inertia::flash('toast', [
+        'type' => 'error',
+        'message' => 'Tidak ada pelamar yang lolos administrasi dan siap mengikuti tes.',
+      ]);
+
+      return back();
+    }
+
+    Inertia::flash('toast', [
+      'type' => 'success',
+      'message' => "Tes teknis berhasil dibuka untuk {$jumlahDibuka} pelamar.",
     ]);
 
     return back();
