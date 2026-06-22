@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HRD\DashboardController;
 use App\Http\Controllers\HRD\LowonganController;
 use App\Http\Controllers\HRD\SeleksiController;
 use App\Http\Controllers\HRD\TesController;
@@ -8,7 +9,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified', 'role:hrd'])->group(function () {
 
-  Route::inertia('/hrd/dashboard', 'hrd/dashboard')->name('hrd.dashboard');
+  Route::get('/hrd/dashboard', [DashboardController::class, 'index'])
+    ->name('hrd.dashboard');
 
   // Lowongan
   Route::get('/lowongan', [LowonganController::class, 'index'])->name('hrd.lowongan.index');
@@ -38,4 +40,7 @@ Route::middleware(['auth', 'verified', 'role:hrd'])->group(function () {
   Route::get('/topsis/{lowongan}/hasil', [TopsisController::class, 'hasil'])->name('hrd.topsis.hasil');
   Route::patch('/topsis/{hasilTopsis}/terima', [TopsisController::class, 'terima'])->name('hrd.topsis.terima');
   Route::patch('/topsis/{hasilTopsis}/tolak', [TopsisController::class, 'tolak'])->name('hrd.topsis.tolak');
+  Route::get('/topsis/{lowongan}/keputusan', [TopsisController::class, 'keputusan'])->name('hrd.topsis.keputusan');
+  Route::get('/topsis/{lowongan}/export-hasil-pdf', [TopsisController::class, 'exportHasilPdf'])->name('hrd.topsis.export-hasil-pdf');
+  Route::get('/topsis/{lowongan}/export-keputusan-pdf', [TopsisController::class, 'exportKeputusanPdf'])->name('hrd.topsis.export-keputusan-pdf');
 });

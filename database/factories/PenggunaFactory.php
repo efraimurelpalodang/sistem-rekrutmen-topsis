@@ -16,23 +16,24 @@ class PenggunaFactory extends Factory
 
   public function definition(): array
   {
-    $faker = \Faker\Factory::create('id_ID');
+    $jenisKelamin = $this->faker->randomElement(['L', 'P']);
 
-    $jenisKelamin = $faker->randomElement(['L', 'P']);
     $nama = $jenisKelamin === 'L'
-      ? $faker->name('male')
-      : $faker->name('female');
+      ? $this->faker->name('male')
+      : $this->faker->name('female');
 
     return [
-      'nik' => $faker->unique()->numerify(str_repeat('#', 16)),
+      'nik' => $this->faker->unique()->numerify('################'),
       'nama' => $nama,
-      'email' => $faker->unique()->safeEmail(),
+      'email' => $this->faker->unique()->safeEmail(),
       'password' => Hash::make('password'),
       'role' => 'pelamar',
-      'tgl_lahir' => $faker->dateTimeBetween('-45 years', '-20 years')->format('Y-m-d'),
+      'tgl_lahir' => $this->faker
+        ->dateTimeBetween('-45 years', '-20 years')
+        ->format('Y-m-d'),
       'jenis_kelamin' => $jenisKelamin,
-      'alamat' => $faker->address(),
-      'no_hp' => '08' . $faker->numerify('##########'),
+      'alamat' => $this->faker->address(),
+      'no_hp' => '08' . $this->faker->numerify('##########'),
       'foto_profil' => null,
       'remember_token' => Str::random(10),
     ];

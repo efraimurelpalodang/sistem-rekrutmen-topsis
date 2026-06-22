@@ -115,7 +115,11 @@ class TopsisService
   private function ambilLamaranSiapDinilai(Lowongan $lowongan): Collection
   {
     return Lamaran::where('lowongan_id', $lowongan->id)
-      ->where('status', Lamaran::STATUS_SELESAI_TES)
+      ->whereIn('status', [
+        Lamaran::STATUS_SELESAI_TES,
+        Lamaran::STATUS_DITERIMA,
+        Lamaran::STATUS_DITOLAK,
+      ])
       ->with([
         'pengguna.pelamarProfile',
         'pengguna.pengalamanKerjas',
@@ -123,7 +127,6 @@ class TopsisService
       ])
       ->get()
       ->filter(function (Lamaran $lamaran) {
-        // Pastikan data yang dibutuhkan lengkap, lewati jika tidak
         return $lamaran->pengguna->pelamarProfile !== null
           && $lamaran->pengguna->tgl_lahir !== null
           && $lamaran->hasilTes !== null;

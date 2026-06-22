@@ -1,6 +1,12 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
-import { useState } from 'react';
+import {
+    ArrowLeft,
+    ChevronDown,
+    ChevronUp,
+    ClipboardList,
+    Download,
+} from 'lucide-react';
+import { Fragment, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -86,12 +92,29 @@ export default function TopsisHasil() {
         <div className="space-y-6 p-6">
             <Head title={`Hasil TOPSIS - ${lowongan.judul}`} />
 
-            <Button variant="ghost" size="sm" asChild className="-ml-2">
-                <Link href={`/lowongan/${lowongan.id}`}>
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Kembali ke detail lowongan
-                </Link>
-            </Button>
+            <div className="flex items-center justify-between">
+                <Button variant="ghost" size="sm" asChild className="-ml-2">
+                    <Link href={`/lowongan/${lowongan.id}`}>
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Kembali ke detail lowongan
+                    </Link>
+                </Button>
+
+                <div className="flex gap-2">
+                    <Button variant="outline" asChild>
+                        <Link href={`/topsis/${lowongan.id}/keputusan`}>
+                            <ClipboardList className="mr-2 h-4 w-4" />
+                            Ringkasan Keputusan
+                        </Link>
+                    </Button>
+                    <Button variant="outline" asChild>
+                        <a href={`/topsis/${lowongan.id}/export-hasil-pdf`}>
+                            <Download className="mr-2 h-4 w-4" />
+                            Export PDF
+                        </a>
+                    </Button>
+                </div>
+            </div>
 
             <CardHeader>
                 <CardTitle className="text-xl">
@@ -131,7 +154,7 @@ export default function TopsisHasil() {
                                     <TableHead className="w-32">
                                         Skor (C)
                                     </TableHead>
-                                    <TableHead className="w-32">
+                                    <TableHead className="w-32 text-center">
                                         Status
                                     </TableHead>
                                     <TableHead className="w-20"></TableHead>
@@ -142,7 +165,7 @@ export default function TopsisHasil() {
                             </TableHeader>
                             <TableBody>
                                 {rankings.map((hasil) => (
-                                    <>
+                                    <Fragment key={hasil.id}>
                                         <TableRow key={hasil.id}>
                                             <TableCell>
                                                 <Badge
@@ -164,7 +187,7 @@ export default function TopsisHasil() {
                                                     4,
                                                 )}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className="text-center">
                                                 <Badge
                                                     variant={
                                                         hasil.lamaran.status ===
@@ -318,7 +341,7 @@ export default function TopsisHasil() {
                                                 </TableCell>
                                             </TableRow>
                                         )}
-                                    </>
+                                    </Fragment>
                                 ))}
                             </TableBody>
                         </Table>
@@ -328,11 +351,3 @@ export default function TopsisHasil() {
         </div>
     );
 }
-
-TopsisHasil.layout = {
-    breadcrumbs: [
-        {
-            title: 'Hasil TOPSIS',
-        },
-    ],
-};
