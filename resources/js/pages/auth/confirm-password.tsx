@@ -26,7 +26,7 @@ export default function ConfirmPassword() {
                 separator="Or confirm with password"
             />
 
-            <Form {...store.form()} resetOnSuccess={['password']}>
+            <Form {...store.form()} resetOnSuccess={['password']} className="w-sm mx-auto">
                 {({ processing, errors }) => (
                     <div className="space-y-6">
                         <div className="grid gap-2">
@@ -60,7 +60,7 @@ export default function ConfirmPassword() {
 }
 
 ConfirmPassword.layout = {
-    title: 'Confirm password',
+    title: 'Konfirmasi Kata Sandi',
     description:
-        'This is a secure area of the application. Please confirm your password before continuing.',
+        'Ini adalah area aman dalam aplikasi. Harap konfirmasi kata sandi Anda sebelum melanjutkan.',
 };

@@ -23,15 +23,15 @@ export default function Security(props: Props) {
 
     return (
         <>
-            <Head title="Security settings" />
+            <Head title="Pengaturan Keamanan" />
 
-            <h1 className="sr-only">Security settings</h1>
+            <h1 className="sr-only">Pengaturan Keamanan</h1>
 
             <div className="space-y-6">
                 <Heading
                     variant="small"
-                    title="Update password"
-                    description="Ensure your account is using a long, random password to stay secure"
+                    title="Perbaharui kata sandi"
+                    description="Pastikan akun Anda menggunakan kata sandi yang panjang dan acak untuk tetap aman"
                 />
 
                 <Form
@@ -60,7 +60,7 @@ export default function Security(props: Props) {
                         <>
                             <div className="grid gap-2">
                                 <Label htmlFor="current_password">
-                                    Current password
+                                    Kata sandi saat ini
                                 </Label>
 
                                 <PasswordInput
@@ -76,7 +76,7 @@ export default function Security(props: Props) {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="password">New password</Label>
+                                <Label htmlFor="password">Kata sandi baru</Label>
 
                                 <PasswordInput
                                     id="password"
@@ -93,7 +93,7 @@ export default function Security(props: Props) {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="password_confirmation">
-                                    Confirm password
+                                    Konfirmasi kata sandi
                                 </Label>
 
                                 <PasswordInput
@@ -101,7 +101,7 @@ export default function Security(props: Props) {
                                     name="password_confirmation"
                                     className="mt-1 block w-full"
                                     autoComplete="new-password"
-                                    placeholder="Confirm password"
+                                    placeholder="Konfirmasi kata sandi"
                                     passwordrules={props.passwordRules}
                                 />
 
@@ -115,7 +115,7 @@ export default function Security(props: Props) {
                                     disabled={processing}
                                     data-test="update-password-button"
                                 >
-                                    Save
+                                    Simpan
                                 </Button>
                             </div>
                         </>
@@ -140,7 +140,7 @@ export default function Security(props: Props) {
 Security.layout = {
     breadcrumbs: [
         {
-            title: 'Security settings',
+            title: 'Pengaturan Keamanan',
             href: edit(),
         },
     ],

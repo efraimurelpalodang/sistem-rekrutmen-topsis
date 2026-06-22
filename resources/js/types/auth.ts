@@ -1,10 +1,16 @@
 export type User = {
     id: number;
-    name: string;
+    nama: string;
     email: string;
+    role: 'pelamar' | 'hrd' | 'admin';
     avatar?: string;
+    nik?: string | null;
+    tgl_lahir?: string | null;
+    jenis_kelamin?: 'L' | 'P' | null;
+    alamat?: string | null;
+    no_hp?: string | null;
+    foto_profil?: string | null;
     email_verified_at: string | null;
-    two_factor_enabled?: boolean;
     created_at: string;
     updated_at: string;
     [key: string]: unknown;
