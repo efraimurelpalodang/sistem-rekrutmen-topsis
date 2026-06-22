@@ -1,15 +1,16 @@
 <?php
 
 use App\Http\Controllers\Auth\CekNikController;
-use App\Http\Controllers\Guest\LowonganController as GuestLowonganController;
+// use App\Http\Controllers\Guest\LowonganController as GuestLowonganController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::inertia('/', 'auth/login')->name('home');
+// Route::inertia('/', 'welcome')->name('home');
 
 // Halaman publik karir
-Route::get('/karir', [GuestLowonganController::class, 'index'])->name('karir.index');
-Route::get('/karir/{lowongan}', [GuestLowonganController::class, 'show'])->name('karir.show');
+// Route::get('/karir', [GuestLowonganController::class, 'index'])->name('karir.index');
+// Route::get('/karir/{lowongan}', [GuestLowonganController::class, 'show'])->name('karir.show');
 
 // Cek NIK duplikat saat register (OCR KTP berjalan di browser via Tesseract.js)
 Route::post('/cek-nik', [CekNikController::class, 'cek'])->name('cek-nik');

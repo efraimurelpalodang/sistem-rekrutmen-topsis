@@ -56,10 +56,10 @@ export default function Register({ passwordRules }: Props) {
         return (
             <>
                 <Head title="Daftar" />
-                <div className="mx-auto w-sm space-y-6">
+                <div className="mx-auto w-sm space-y-4">
                     {/* Deskripsi + icon hanya tampil jika belum ada foto yang diupload */}
                     {!fotoPreview && (
-                        <div className="space-y-1 text-center">
+                        <div className="space-y-1 text-center mb-10">
                             <ScanLine className="mx-auto h-10 w-10 text-muted-foreground" />
                             <p className="text-sm text-muted-foreground">
                                 Unggah foto KTP Anda untuk memulai pendaftaran.
@@ -69,12 +69,12 @@ export default function Register({ passwordRules }: Props) {
                     )}
 
                     {fotoPreview && (
-                        <Card>
-                            <CardContent className="pt-6">
+                        <Card className="p-0 rounded-none">
+                            <CardContent className="p-1">
                                 <img
                                     src={fotoPreview}
                                     alt="Preview KTP"
-                                    className="w-full rounded-md border"
+                                    className="w-full m-0"
                                 />
                             </CardContent>
                         </Card>

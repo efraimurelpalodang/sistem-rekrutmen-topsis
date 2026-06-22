@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Pelamar\DashboardController;
+use App\Http\Controllers\Guest\LowonganController;
 use App\Http\Controllers\Pelamar\LamaranController;
 use App\Http\Controllers\Pelamar\ProfilController;
 use App\Http\Controllers\Pelamar\TesController;
@@ -9,6 +10,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'verified', 'role:pelamar'])->group(function () {
 
   Route::get('/pelamar/dashboard', [DashboardController::class, 'index'])->name('pelamar.dashboard');
+
+  // lowongan
+  Route::get('/karir', [LowonganController::class, 'index'])->name('karir.index');
+  Route::get('/karir/{lowongan}', [LowonganController::class, 'show'])->name('karir.show');
 
   // Profil
   Route::get('/profil', [ProfilController::class, 'edit'])->name('pelamar.profil.edit');
